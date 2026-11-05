@@ -1,4 +1,4 @@
-name: Build RAPJIE APK
+name: Build RAPJIE IDE
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         run: |
           cat << 'EOF' > package.json
           {
-            "name": "rapjie-anonymous",
+            "name": "rapjie-ide",
             "version": "1.0.0",
             "dependencies": {
               "@capacitor/android": "^6.0.0",
@@ -40,8 +40,8 @@ jobs:
           
           cat << 'EOF' > capacitor.config.json
           {
-            "appId": "com.rapjie.anonymous",
-            "appName": "RAPJIE ANONYMOUS",
+            "appId": "com.rapjie.ide",
+            "appName": "RAPJIE IDE",
             "webDir": "www"
           }
           EOF
@@ -55,15 +55,11 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
         
-      - name: Inject Permissions
-        run: |
-          sed -i 's/<application/<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" \/>\n    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" \/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" \/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" \/>\n    <application/' android/app/src/main/AndroidManifest.xml
-          
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: RAPJIE-APK
+          name: RAPJIE-IDE-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk

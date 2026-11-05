@@ -3,184 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RAPJIE IDE // BLACK HAT</title>
-    <!-- Panggil Ace Editor via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
+    <title>RAPJIE STORE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Share Tech Mono', monospace; }
-        body { background-color: #000; color: #00FF41; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; user-select: none; }
+        body { background-color: #121212; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        #splash {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center; padding: 20px;
-        }
-        #splash h1 { font-size: 22px; text-shadow: 0 0 10px #00FF41; margin-bottom: 20px; }
-        #splash p { color: #888; font-size: 14px; margin-bottom: 5px; }
-        #splash .system { color: #00FF41; font-size: 12px; text-align: left; width: 100%; max-width: 300px; margin-top: 20px;}
-        
+        /* Splash */
+        #splash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #splash h1 { color: #FF5722; font-size: 28px; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
+        #splash p { color: #888; font-size: 12px; }
+
         /* Header */
-        header {
-            background: #0a0a0a; padding: 10px; border-bottom: 1px solid #222;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        header h2 { font-size: 16px; text-shadow: 0 0 5px #00FF41; }
-        .status { font-size: 12px; color: #FFAA00; }
+        header { background: #1E1E1E; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; z-index: 10; }
+        .logo { font-size: 18px; font-weight: 800; color: #FF5722; }
+        .saldo { background: #2A2A2A; padding: 5px 10px; border-radius: 20px; font-size: 11px; border: 1px solid #444; display: flex; align-items: center; gap: 5px; }
+        .saldo span { color: #00FF41; font-weight: bold; }
 
-        /* Toolbar */
-        .toolbar {
-            display: flex; background: #111; border-bottom: 1px solid #222; padding: 5px;
-        }
-        .toolbar button {
-            flex: 1; background: transparent; color: #00FF41; border: 1px solid #00FF41;
-            padding: 8px; margin: 0 5px; font-weight: bold; cursor: pointer;
-            text-shadow: 0 0 5px #00FF41;
-        }
-        .toolbar button:active { background: #00FF41; color: #000; text-shadow: none; }
+        /* Banner */
+        .banner { margin: 15px; border-radius: 10px; overflow: hidden; position: relative; height: 120px; background: linear-gradient(45deg, #FF5722, #FF9800); display: flex; align-items: center; padding: 20px; }
+        .banner h2 { font-size: 20px; font-weight: 800; line-height: 1.2; max-width: 60%; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .banner p { font-size: 10px; margin-top: 5px; opacity: 0.9; }
 
-        /* Editor & Preview */
-        #container { display: flex; flex-direction: column; flex: 1; }
-        #editor { flex: 1; font-size: 14px; }
-        
-        #preview-container {
-            flex: 1; border-top: 2px solid #00FF41; background: #fff; display: none;
-            position: relative;
-        }
-        #preview-header {
-            background: #111; color: #00FF41; padding: 5px 10px; font-size: 12px;
-            display: flex; justify-content: space-between;
-        }
-        #preview { width: 100%; height: calc(100% - 25px); border: none; background: #fff; }
+        /* Content */
+        #content { flex: 1; overflow-y: auto; padding: 0 15px 20px 15px; }
 
-        /* Footer Terminal */
-        footer {
-            background: #0a0a0a; color: #888; padding: 5px 10px; font-size: 11px;
-            border-top: 1px solid #222;
-        }
+        .section-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title span { font-size: 11px; color: #FF5722; cursor: pointer; }
+
+        /* Game Grid */
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .game-card { background: #1E1E1E; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #333; cursor: pointer; transition: 0.2s; }
+        .game-card:active { background: #2A2A2A; transform: scale(0.95); }
+        .game-img { width: 60px; height: 60px; border-radius: 12px; background: #333; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .game-title { font-size: 10px; text-align: center; font-weight: 600; }
+
+        /* Product List (Bawah) */
+        .product-list { display: flex; flex-direction: column; gap: 10px; }
+        .product-card { background: #1E1E1E; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 15px; border: 1px solid #333; cursor: pointer; }
+        .product-icon { width: 50px; height: 50px; background: #2A2A2A; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .product-info { flex: 1; }
+        .product-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+        .product-price { font-size: 12px; color: #FF5722; font-weight: 800; }
+
+        /* Modal / Popup Beli */
+        #modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
+        .modal-box { background: #1E1E1E; width: 100%; border-radius: 12px; padding: 20px; border: 1px solid #444; text-align: center; }
+        .modal-box h3 { font-size: 16px; margin-bottom: 10px; color: #fff; }
+        .modal-box p { font-size: 12px; color: #aaa; margin-bottom: 20px; }
+        .modal-box input { width: 100%; padding: 12px; background: #121212; border: 1px solid #444; color: #fff; border-radius: 6px; margin-bottom: 15px; outline: none; font-size: 14px; }
+        .modal-btn { width: 100%; padding: 12px; background: #FF5722; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; margin-bottom: 10px; }
+        .modal-close { width: 100%; padding: 12px; background: transparent; color: #888; border: none; font-size: 12px; cursor: pointer; }
+
+        /* Bottom Nav */
+        nav { background: #1E1E1E; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; z-index: 10; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; cursor: pointer; }
+        .nav-item.active { color: #FF5722; }
+        .nav-item span { font-size: 20px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <h1>[ RAPJIE IDE // BLACK HAT ]</h1>
-        <p>Initializing secure environment...</p>
-        <div class="system" id="boot-log"></div>
+        <h1>RAPJIE STORE</h1>
+        <p>Top Up Game Termurah & Tercepat</p>
     </div>
 
     <header>
-        <h2>RAPJIE_IDE</h2>
-        <div class="status">● SECURE</div>
+        <div class="logo">RAPJIE STORE</div>
+        <div class="saldo">Saldo: <span>Rp 50.000</span></div>
     </header>
 
-    <div class="toolbar">
-        <button onclick="runCode()">▶ RUN CODE</button>
-        <button onclick="clearCode()">⨯ CLEAR</button>
-    </div>
-
-    <div id="container">
-        <!-- Editor Area -->
-        <div id="editor">// Selamat datang di RAPJIE IDE, Operator.
-// Tulis kode HTML/CSS/JS lo di sini.
-// Tekan RUN CODE buat liat hasilnya.
-
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body {
-            background: #111;
-            color: #00FF41;
-            font-family: monospace;
-            text-align: center;
-            padding-top: 50px;
-        }
-        h1 { text-shadow: 0 0 10px #00FF41; }
-    </style>
-</head>
-<body>
-    <h1>HACK THE PLANET</h1>
-    <p>RAPJIE SYSTEM ONLINE.</p>
-</body>
-</html></div>
-        
-        <!-- Preview Area -->
-        <div id="preview-container">
-            <div id="preview-header">
-                <span>TERMINAL OUTPUT</span>
-                <span onclick="closePreview()" style="cursor:pointer;">[X] CLOSE</span>
-            </div>
-            <iframe id="preview"></iframe>
+    <div class="banner">
+        <div>
+            <h2>Diskon 50% Khusus User Baru</h2>
+            <p>Buruan sebelum kehabisan!</p>
         </div>
     </div>
 
-    <footer>
-        <span id="footer-text">Ready. Awaiting input...</span>
-    </footer>
+    <div id="content">
+        <div class="section-title">Top Up Cepat <span>Lihat Semua</span></div>
+        <div class="game-grid">
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">🔫</div>
+                <div class="game-title">Mobile Legends</div>
+            </div>
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">🔥</div>
+                <div class="game-title">Free Fire</div>
+            </div>
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">🎯</div>
+                <div class="game-title">PUBG Mobile</div>
+            </div>
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">⚔️</div>
+                <div class="game-title">Genshin Impact</div>
+            </div>
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">🎮</div>
+                <div class="game-title">Valorant</div>
+            </div>
+            <div class="game-card" onclick="alert('Fitur detail game belum tersedia di demo ini.')">
+                <div class="game-img">🏆</div>
+                <div class="game-title">Lainnya</div>
+            </div>
+        </div>
+
+        <div class="section-title">Produk Terlaris</div>
+        <div class="product-list">
+            <div class="product-card" onclick="openModal('Diamond ML 86', 'Rp 20.000')">
+                <div class="product-icon">💎</div>
+                <div class="product-info">
+                    <div class="product-name">Diamond Mobile Legends 86💎</div>
+                    <div class="product-price">Rp 20.000</div>
+                </div>
+            </div>
+            <div class="product-card" onclick="openModal('Diamond FF 70', 'Rp 10.000')">
+                <div class="product-icon">💎</div>
+                <div class="product-info">
+                    <div class="product-name">Diamond Free Fire 70💎</div>
+                    <div class="product-price">Rp 10.000</div>
+                </div>
+            </div>
+            <div class="product-card" onclick="openModal('UC PUBG 60', 'Rp 15.000')">
+                <div class="product-icon">💰</div>
+                <div class="product-info">
+                    <div class="product-name">60 UC PUBG Mobile</div>
+                    <div class="product-price">Rp 15.000</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup Pembelian -->
+    <div id="modal">
+        <div class="modal-box">
+            <h3 id="modal-title">Nama Produk</h3>
+            <p id="modal-price">Rp 0</p>
+            <p style="text-align:left; margin-bottom:5px; font-size:10px; color:#888;">Masukkan User ID Game:</p>
+            <input type="text" id="userId" placeholder="Contoh: 12345678 (1234)">
+            <button class="modal-btn" onclick="prosesBeli()">Beli Sekarang</button>
+            <button class="modal-close" onclick="closeModal()">Batal</button>
+        </div>
+    </div>
+
+    <nav>
+        <div class="nav-item active"><span>🏠</span> Home</div>
+        <div class="nav-item" onclick="alert('Fitur Transaksi belum tersedia.')"><span>🧾</span> Transaksi</div>
+        <div class="nav-item" onclick="alert('Fitur Akun belum tersedia.')"><span>👤</span> Akun</div>
+    </nav>
 
     <script>
-        // --- BOOT SEQUENCE ---
-        const bootLogs = [
-            "> Bypassing mainframe... [OK]",
-            "> Injecting payload... [OK]",
-            "> Establishing proxy... [OK]",
-            "> ACCESS GRANTED."
-        ];
-        let logIndex = 0;
-        const logElement = document.getElementById('boot-log');
+        // --- SPLASH LOGIC ---
+        setTimeout(() => {
+            document.getElementById('splash').style.display = 'none';
+        }, 2500);
+
+        // --- MODAL LOGIC ---
+        let selectedProduct = '';
         
-        function printLog() {
-            if (logIndex < bootLogs.length) {
-                const p = document.createElement('div');
-                p.innerText = bootLogs[logIndex];
-                logElement.appendChild(p);
-                logIndex++;
-                setTimeout(printLog, 600);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('splash').style.display = 'none';
-                }, 1000);
-            }
+        function openModal(name, price) {
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-price').innerText = price;
+            document.getElementById('userId').value = '';
+            document.getElementById('modal').style.display = 'flex';
+            selectedProduct = name;
         }
-        setTimeout(printLog, 500);
 
-        // --- ACE EDITOR SETUP ---
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow_night_eighties"); // Tema hacker
-        editor.session.setMode("ace/mode/html");
-        editor.setOptions({
-            fontSize: "14px",
-            showPrintMargin: false,
-            useWorker: false,
-            wrap: true
-        });
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
 
-        // --- LOGIC ---
-        function runCode() {
-            const code = editor.getValue();
-            const previewContainer = document.getElementById('preview-container');
-            const previewFrame = document.getElementById('preview');
+        function prosesBeli() {
+            const userId = document.getElementById('userId').value;
+            if(!userId) { alert("Isi User ID dulu bre!"); return; }
             
-            // Tampilkan preview
-            previewContainer.style.display = 'block';
-            
-            // Tulis kode ke iframe
-            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            previewDoc.open();
-            previewDoc.write(code);
-            previewDoc.close();
+            // Simulasi loading
+            const btn = document.querySelector('.modal-btn');
+            btn.innerText = "Memproses...";
+            btn.disabled = true;
 
-            document.getElementById('footer-text').innerText = "Code executed successfully.";
-        }
-
-        function closePreview() {
-            document.getElementById('preview-container').style.display = 'none';
-            document.getElementById('footer-text').innerText = "Preview closed.";
-        }
-
-        function clearCode() {
-            editor.setValue("", -1);
-            document.getElementById('footer-text').innerText = "Buffer cleared.";
+            setTimeout(() => {
+                alert(`✅ PEMBAYARAN BERHASIL!\n\nProduk: ${selectedProduct}\nTujuan: ${userId}\n\nTerima kasih sudah berbelanja di RAPJIE STORE.`);
+                btn.innerText = "Beli Sekarang";
+                btn.disabled = false;
+                closeModal();
+            }, 1500);
         }
     </script>
 </body>

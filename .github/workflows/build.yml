@@ -10,26 +10,60 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          
+      - name: Auto-Fix Dependencies & Configs
+        run: |
+          cat << 'EOF' > package.json
+          {
+            "name": "rapjie-anonymous",
+            "version": "1.0.0",
+            "dependencies": {
+              "@capacitor/android": "^6.0.0",
+              "@capacitor/core": "^6.0.0",
+              "@capgo/capacitor-wifi": "^6.0.0",
+              "cordova-plugin-applist": "^1.2.5"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "^6.0.0"
+            }
+          }
+          EOF
+          
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "com.rapjie.anonymous",
+            "appName": "RAPJIE ANONYMOUS",
+            "webDir": "www"
+          }
+          EOF
+          
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
+        
       - name: Add Android platform
         run: npx cap add android
+        
       - name: Sync Capacitor
         run: npx cap sync android
+        
       - name: Inject Permissions
         run: |
           sed -i 's/<application/<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" \/>\n    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" \/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" \/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" \/>\n    <application/' android/app/src/main/AndroidManifest.xml
+          
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
+        
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
